@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Icon, Button, Divider, Avatar, Popover, Table } from 'choerodon-ui';
 import { axios } from '@choerodon/boot';
 import { Size } from 'choerodon-ui/lib/_util/enum';
+import {BrowserRouter as Router, Route, NavLink, Switch } from 'react-router-dom'
 
 const SubMenu = Menu.SubMenu;
 
@@ -32,17 +33,6 @@ export default class Master extends Component {
         useremail:response.email
       }) 
     })
-    .catch(function (error) {
-        console.log(error);
-    });
-  }
-  //测试第二个接口
-  componentDidMount(){
-    axios
-    .post("http://api.staging.saas.hand-china.com/iam/v1/roles/search?page=1&size=10&sort=id,desc",{level:"site"})
-    .then(function (response) {
-        console.log('2',response);
-      }) 
     .catch(function (error) {
         console.log(error);
     });
@@ -176,8 +166,10 @@ export default class Master extends Component {
               <span>组织管理</span>
             </Menu.Item>
             <Menu.Item key="2">
-              <Icon type="desktop_windows" />
-              <span>角色管理</span>
+              <NavLink to='/test/role1'>
+                <Icon type="desktop_windows" />
+                <span>角色管理</span>
+              </NavLink>
             </Menu.Item>
             <Menu.Item key="3">
               <Icon type="inbox" />

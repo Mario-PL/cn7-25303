@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Menu, Icon, Button, Divider, Avatar, Popover, Table, Form,  Input } from 'choerodon-ui';
-//import Role2form1 from './role2form1'
+import {BrowserRouter as Router, Route, NavLink, Switch } from 'react-router-dom'
 import Role2form1 from './role2form1'
 
 require('../style/role2.less')
@@ -12,7 +12,9 @@ class Role2 extends Component {
         {/* 创建角色的头部 */}
         <div id='Head'>
             <div id='HeadOne'>
-              <Button funcType="flat" icon='arrow_back'/>
+              <NavLink to='/test/role1'>
+                <Button funcType="flat" icon='arrow_back'/>
+              </NavLink>
             </div>
             <span id='HeadTwo'>创建项目层角色</span>
             <div id='HeadThree'>
