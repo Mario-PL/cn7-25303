@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Menu, Icon, Button, Divider, Avatar, Popover, Table } from 'choerodon-ui';
+import { Menu, Icon, Button, Divider, Avatar, Popover, Table, Form,  Input } from 'choerodon-ui';
+//import Role2form1 from './role2form1'
+import Role2form1 from './role2form1'
 
 require('../style/role2.less')
 
@@ -17,7 +19,10 @@ class Role2 extends Component {
               <Button funcType="flat"><Icon type="refresh" />刷新</Button>
             </div>
           </div>
-        
+        {/* 表单 */}
+        <div>
+          <Role2form1 />
+        </div>
       </div>
     );
   }

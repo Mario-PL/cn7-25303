@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Icon, Button, Divider, Avatar, Popover, Table } from 'choerodon-ui';
 import { axios } from '@choerodon/boot';
 import { Size } from 'choerodon-ui/lib/_util/enum';
+
 const SubMenu = Menu.SubMenu;
 
 require('../style/mastercss.less')
@@ -35,6 +36,18 @@ export default class Master extends Component {
         console.log(error);
     });
   }
+  //测试第二个接口
+  componentDidMount(){
+    axios
+    .post("http://api.staging.saas.hand-china.com/iam/v1/roles/search?page=1&size=10&sort=id,desc",{level:"site"})
+    .then(function (response) {
+        console.log('2',response);
+      }) 
+    .catch(function (error) {
+        console.log(error);
+    });
+  }
+
   render() {
     //获取用户姓名和邮箱
     const username = this.state.username;
@@ -44,8 +57,8 @@ export default class Master extends Component {
     const { AutoRouter } = this.props;
     /* 定义点击头像时气泡卡片的信息 */
     const content = (
-      <div>
-        <p>
+      <div style={{minWidth:'260px'}}>
+         <p>
           <div style={{float:'left'}}><Avatar icon="person" size="large"/></div>
           <div style={{float:'left'}}>
             <div>{username}</div>
@@ -53,13 +66,13 @@ export default class Master extends Component {
           </div>
         </p>
         <div style={{clear:'both'}}>
-          <p><Button icon='person'>个人信息</Button></p>
-          <p><Button icon='vpn_key'>修改密码</Button></p>
-          <p><Button icon=''>权限信息</Button></p>
-          <p><Button icon=''>授权管理</Button></p>
+          <p ><Button icon='person'>个人信息</Button></p>
+          <p ><Button icon='vpn_key'>修改密码</Button></p>
+          <p><Button icon='vpn_key'>权限信息</Button></p>
+          <p><Button icon='vpn_key'>授权管理</Button></p>
           <p><Button icon='comment'>消息通知</Button></p>
-          <p><Button icon=''>退出登录</Button></p>
-        </div>
+          <p><Button icon='vpn_key'>退出登录</Button></p>
+        </div> 
       </div>
     );
 
