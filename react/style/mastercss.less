@@ -1,12 +1,13 @@
 @headfontcolor: #FFF;
-
+@divider: #D3D3D3;
 #Head{
     display: flex;
     justify-content: flex-start;
     width: 100%;
 }
 #HeadLeft{
-    width: 18%;
+    //width: 18%;
+    width: 250px;
     display: inline-block;
     background-color: #303F9F;
     text-align: center;
@@ -18,7 +19,7 @@
     
 }
 #HeadMid{
-    width: 65%;
+    flex: 1;
     display: inline-block;
     background-color: #3F51B5;
     line-height: 48px;
@@ -39,37 +40,73 @@
     
 }
 #HeadRight{
-    width: 17%;
+    flex: 1;
     display: inline-block;
     background-color: #3F51B5;
     line-height: 48px;
     text-align: right;
-    
     #HeadRightBlock{
         display: inline-block;
         color: @headfontcolor;
-        margin-right: 10%;
+        margin-right: 3%;
         Button{
             color: @headfontcolor;
             width: 40px;
+            margin-right: 5px;
         };
     };
 }
+#bottom{
+    display: flex;
+    justify-content: flex-start;
+}
 #LeftMenu{
-    width: 18%;
+    //width: 18%;
     background-color: #FAFAFA;
     display: inline-block;
     vertical-align:top;
+    max-width: 250px;
     #LeftMenuHead{
-        border-bottom: 1px solid black;
+        border-bottom: 1px solid @divider;
         height: 48px;
     }
 }
+.c7n-menu-inline .c7n-menu-item{
+    width: 250px;
+}
+
 #rest{
-    width: 82%;
+    flex: 1;
     display: inline-block;
     vertical-align:top;
 }
-
+#headsculpture{
+    min-width: 240px;
+    
+    p{
+        div{
+            float: left;
+            margin-left: 5%;
+            #username{
+                margin-bottom: 0%;
+            }
+        }
+    }
+}
+#userbutton{
+    clear: both;
+    margin-left: -16px;
+    margin-right: -16px;
+    margin-bottom: -12px;
+    p{
+        line-height: 40px;
+        margin-bottom: 0%;
+        Button{
+            text-align: left;
+            height: 40px !important;
+            width: 100%;
+        }
+    }
+}
 
 

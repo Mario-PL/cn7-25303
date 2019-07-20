@@ -1,8 +1,33 @@
-import { Tabs,Button,Table,Input, Row, Col,Tag } from 'choerodon-ui';
+import { Tabs,Table,Input, Row, Col,Tag, Icon } from 'choerodon-ui';
+import { Select } from 'choerodon-ui';
+import classNames from 'classnames';
+import { Button } from 'choerodon-ui/pro'
 import { Modal } from 'choerodon-ui/pro';
 import React, { Component } from 'react';
+import Store from './role1store';
+import Store2 from './rele2form1store';
+import { axios } from '@choerodon/boot';
+import { observer } from 'mobx-react';
 
 const TabPane = Tabs.TabPane;
+
+//标签
+const Option = Select.Option;
+const children = [];
+for (let i = 10; i < 36; i++) {
+  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+}
+function handleChange(value) {
+  console.log(`selected ${value}`);
+}
+function handleRender(liNode, value) {
+  console.log(value);
+  return React.cloneElement(liNode, {
+    className: classNames(liNode.props.className, 'choice-render'),
+  });
+}
+
+
 //模态框
 const modalKey = Modal.key();
 function openModal() {
@@ -39,76 +64,26 @@ function preventDefault(e) {
 
 /* 表格1设置 */
 const columns = [{
-    title: 'Name',
+    title: '菜单',
     dataIndex: 'name',
     key: 'name',
+    width:'50%'
   }, {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    width: '12%',
+    title: '页面入口',
+    dataIndex: 'route',
+    key: 'route',
+    width: '45%',
   }, {
-    title: 'Address',
-    dataIndex: 'address',
-    width: '30%',
-    key: 'address',
-  },{
-    title: 'Button',
-    dataIndex: 'button',
-    key: 'button',
-    width: '10%',
+    render:(text,record)=>{
+      if(record.type){
+        return (
+          <Button onClick={openModal}><Icon type="add_circle" /></Button>
+        )
+      }
+    }
+    
   }];
-  const data = [{
-    key: 1,
-    name: 'John Brown sr.',
-    age: 70,
-    address: 'New York No. 1 Lake Park',
-    button:<Button onClick={openModal}>按钮</Button>,
-    children: [{
-      key: 11,
-      name: 'John Brown',
-      age: 42,
-      address: 'New York No. 2 Lake Park',
-    }, {
-      key: 12,
-      name: 'John Brown jr.',
-      age: 30,
-      address: 'New York No. 3 Lake Park',
-      children: [{
-        key: 121,
-        name: 'Jimmy Brown',
-        age: 16,
-        address: 'New York No. 3 Lake Park',
-      }],
-    }, {
-      key: 13,
-      name: 'Jim Green sr.',
-      age: 72,
-      address: 'London No. 1 Lake Park',
-      children: [{
-        key: 131,
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 2 Lake Park',
-        children: [{
-          key: 1311,
-          name: 'Jim Green jr.',
-          age: 25,
-          address: 'London No. 3 Lake Park',
-        }, {
-          key: 1312,
-          name: 'Jimmy Green sr.',
-          age: 18,
-          address: 'London No. 4 Lake Park',
-        }],
-      }],
-    }],
-  }, {
-    key: 2,
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }];
+  
   // rowSelection objects indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -166,33 +141,64 @@ const rowSelection2 = {
   selections: true,
 };
 
+@observer
 export default class Master extends Component {
+   componentDidMount(){
+    axios
+    .get(`/iam/v1/menus/menu_config?code=choerodon.code.top.${Store.getLevelvalue}`)
+    .then(function (response) {
+      Store2.setMenuinfo(response.subMenus);
+      console.log('1',Store2.Menuinfo)
+    }) 
+    .catch(function (error) {
+      console.log(error);
+  });
+  } 
+
+
     render(){
         return(
             <div style={{marginTop:'20px',marginLeft:'20px'}}>
                 {/* 头部 */}
-                 <Row gutter={8}>
-                    <Col span={6}>
-                    <Input placeholder="角色名称" required label="Basic" />
-                    </Col>
-                    <Col span={6}>
+                  <Row gutter={8}>
+                    <Col span={6}> 
+                    <Input placeholder="角色名称" required label="Basic" size="5"/>
+                     </Col>
+                    <Col span={6}> 
                     <Input placeholder="项目编码" required label="Basic" />
+                     </Col>
+                  </Row>
+                  <div style={{height:'20px'}}></div>
+                  <Row>
+                    <Col span={8}>
+                      <Select
+                        mode="tags"
+                        style={{ width: '100%' }}
+                        label="标签用例"
+                        placeholder="tags"
+                        onChange={handleChange}
+                        choiceRender={handleRender}
+                        allowClear
+                      >
+                        {children}
+                      </Select>
                     </Col>
-                </Row>
-                {/* 标签 */}
-                <div style={{marginTop:'20px'}}>
-                  <Tag closable onClose={log} color="#E0E0E0">organization.owner</Tag>
-                </div>
+                  </Row>
+
                 {/* 表格1 */}
                 <div style={{marginTop:'20px'}}>
                   <Tabs defaultActiveKey="1" onChange={callback}>
                       <TabPane tab="项目层" key="1">
-                          <Table columns={columns} rowSelection={rowSelection} dataSource={data} />
+                          <Table columns={columns} rowSelection={rowSelection} dataSource={Store2.getMenuinfo} />
                       </TabPane>
                       <TabPane tab="个人中心" key="2">
-                          2
+                      <Table columns={columns} rowSelection={rowSelection} dataSource={data2} />
                       </TabPane>
                   </Tabs>
+                </div>
+                <div>
+                  <Button funcType="raised" color="blue">创建</Button>
+                  <Button funcType="raised">取消</Button>
                 </div>
             </div>
         )

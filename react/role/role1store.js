@@ -2,7 +2,8 @@ import{action, computed, observable, observe} from 'mobx';
 
 class Store{
     @observable userinfo=[];
-    @observable levelvalue='';
+    @observable levelvalue='site';
+    @observable levelchinese='全局';
     
     @action
     setUserinfo(userinfo){
@@ -10,7 +11,11 @@ class Store{
     }
     @action
     setLevelvalue(levelvalue){
-        this.levelvalue=levelvalue
+        this.levelvalue=levelvalue;
+    }
+    @action
+    setLevelchinese(levelchinese){
+        this.levelchinese=levelchinese;
     }
 
     @computed
@@ -20,6 +25,10 @@ class Store{
     @computed
     get getLevelvalue(){
         return this.levelvalue;
+    }
+    @computed
+    get getLevelchinese(){
+        return this.levelchinese;
     }
 }
 const store = new Store();

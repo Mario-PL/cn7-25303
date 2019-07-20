@@ -13,9 +13,10 @@ export default class Master extends Component {
     collapsed: false,
     username:"",
     useremail:"",
+    avatarsrc:"",
   }
 
-  //好像是左侧伸缩菜单相关
+  //左侧伸缩菜单相关
   toggleCollapsed = () => {
     this.setState({
       collapsed: !this.state.collapsed,
@@ -30,8 +31,10 @@ export default class Master extends Component {
     .then(function (response) {
       _this.setState({
         username:response.realName,
-        useremail:response.email
+        useremail:response.email,
+        avatarsrc:response.imageUrl,
       }) 
+      console.log('111',response)
     })
     .catch(function (error) {
         console.log(error);
@@ -47,15 +50,15 @@ export default class Master extends Component {
     const { AutoRouter } = this.props;
     /* 定义点击头像时气泡卡片的信息 */
     const content = (
-      <div style={{minWidth:'260px'}}>
+      <div id='headsculpture'>
          <p>
-          <div style={{float:'left'}}><Avatar icon="person" size="large"/></div>
-          <div style={{float:'left'}}>
-            <div>{username}</div>
-            <div>{useremail}</div>
+          <div><Avatar src={this.state.avatarsrc} size="large"/></div>
+          <div>
+            <p id='username'>{username}</p>
+            <p>{useremail}</p>
           </div>
         </p>
-        <div style={{clear:'both'}}>
+        <div id='userbutton'>
           <p ><Button icon='person'>个人信息</Button></p>
           <p ><Button icon='vpn_key'>修改密码</Button></p>
           <p><Button icon='vpn_key'>权限信息</Button></p>
@@ -140,73 +143,77 @@ export default class Master extends Component {
                 <Button funcType="flat" icon='local_airport'/>
                 <Button funcType="flat" icon='local_bar'/>
                 <Popover content={content} placement="bottom" trigger="click">
-                  <Avatar icon="person" />
+                  <Avatar src={this.state.avatarsrc}/>
                 </Popover>
 
               </div>
           </div>
         </div>
-        {/*左边菜单*/}
-        <div id='LeftMenu'>
-          <div id='LeftMenuHead'>
-            <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 0, height: 48 }}>
-              <Icon type={this.state.collapsed ? 'dehaze' : 'dehaze'} />
-            </Button>
-            <span>平台设置</span>
+        {/* 下半部分整体flex */}
+        <div id='bottom'>
+          {/*左边菜单*/}
+          <div id='LeftMenu'>
+            <div id='LeftMenuHead'>
+              <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 0, height: 48 }}>
+                <Icon type={this.state.collapsed ? 'dehaze' : 'dehaze'} />
+              </Button>
+            </div>
+            <div id='setMenu'>
+              <Menu
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                mode="inline"
+                inlineCollapsed={this.state.collapsed}
+                inlineIndent="24"
+              >
+                <Menu.Item key="1">
+                  <Icon type="pie_chart_outlined" />
+                  <span>组织管理</span>
+                </Menu.Item>
+                <Menu.Item key="2">
+                  <NavLink to='/test/role1'>
+                    <Icon type="desktop_windows" />
+                    <span>角色管理</span>
+                  </NavLink>
+                </Menu.Item>
+                <Menu.Item key="3">
+                  <Icon type="inbox" />
+                  <span>角色标签</span>
+                </Menu.Item>
+                <Menu.Item key="4">
+                  <Icon type="inbox" />
+                  <span>平台角色分配</span>
+                </Menu.Item>
+                <Menu.Item key="5">
+                  <Icon type="inbox" />
+                  <span>Root用户设置</span>
+                </Menu.Item>
+                <Menu.Item key="6">
+                  <Icon type="inbox" />
+                  <span>菜单配置</span>
+                </Menu.Item>
+                <Menu.Item key="7">
+                  <Icon type="inbox" />
+                  <span>组织类型</span>
+                </Menu.Item>
+                <Menu.Item key="8">
+                  <Icon type="inbox" />
+                  <span>项目类型</span>
+                </Menu.Item>
+                <Menu.Item key="9">
+                  <Icon type="inbox" />
+                  <span>仪表盘配置</span>
+                </Menu.Item>
+                <Menu.Item key="10">
+                  <Icon type="inbox" />
+                  <span>系统配置</span>
+                </Menu.Item>
+              </Menu>
+            </div>
           </div>
-          <Menu
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            mode="inline"
-            inlineCollapsed={this.state.collapsed}
-            inlineIndent="3"
-          >
-            <Menu.Item key="1">
-              <Icon type="pie_chart_outlined" />
-              <span>组织管理</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <NavLink to='/test/role1'>
-                <Icon type="desktop_windows" />
-                <span>角色管理</span>
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <Icon type="inbox" />
-              <span>角色标签</span>
-            </Menu.Item>
-            <Menu.Item key="4">
-              <Icon type="inbox" />
-              <span>平台角色分配</span>
-            </Menu.Item>
-            <Menu.Item key="5">
-              <Icon type="inbox" />
-              <span>Root用户设置</span>
-            </Menu.Item>
-            <Menu.Item key="6">
-              <Icon type="inbox" />
-              <span>菜单配置</span>
-            </Menu.Item>
-            <Menu.Item key="7">
-              <Icon type="inbox" />
-              <span>组织类型</span>
-            </Menu.Item>
-            <Menu.Item key="8">
-              <Icon type="inbox" />
-              <span>项目类型</span>
-            </Menu.Item>
-            <Menu.Item key="9">
-              <Icon type="inbox" />
-              <span>仪表盘配置</span>
-            </Menu.Item>
-            <Menu.Item key="10">
-              <Icon type="inbox" />
-              <span>系统配置</span>
-            </Menu.Item>
-          </Menu>
+          {/*右边router*/}
+          <div id='rest'><AutoRouter /> </div>
         </div>
-        {/*右边router*/}
-        <div id='rest'><AutoRouter /> </div>
       </div>
     );
   }

@@ -2,48 +2,55 @@ import React, { Component } from 'react';
 import { Icon,  Divider, Avatar, Popover, Table } from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro'
 import { Menu, Dropdown } from 'choerodon-ui/pro';
-
 import {BrowserRouter as Router, Route, NavLink, Switch } from 'react-router-dom'
 import { axios } from '@choerodon/boot';
 import Store from './role1store';
 import { observer } from 'mobx-react';
 
 require('../style/role1.less')
+
 @observer
 class Role1 extends Component {
-  
-  
+
   componentDidMount(){
-    const _this=this
+    Store.setLevelvalue('site')
     axios
-    .post("http://api.staging.saas.hand-china.com/iam/v1/roles/search?page=1&size=50&sort=id,desc",{level:Store.getLevelvalue})
+    .post("http://api.staging.saas.hand-china.com/iam/v1/roles/search?page=1&size=50&sort=id,desc",{level:'site'})
     .then(function (response) {
-        console.log('3',response);
-        Store.setUserinfo(response.list)
-        console.log('4',Store.userinfo)
-        console.log('5',Store.userinfo.name)
-      }) 
+      Store.setUserinfo(response.list)
+    }) 
     .catch(function (error) {
-        console.log(error);
-    });
+      console.log(error);
+  });
   }
 
   changelevelvalue=({key})=>{
     console.log(key);
     if(key==1){
       Store.setLevelvalue('site')
+      Store.setLevelchinese('全局')
     }
     else if(key==2){
       Store.setLevelvalue('organization')
+      Store.setLevelchinese('组织')
     }
     else if(key==3){
       Store.setLevelvalue('project')
+      Store.setLevelchinese('项目')
     }
-    console.log('??',Store.getLevelvalue);
+    
+    axios
+    .post("http://api.staging.saas.hand-china.com/iam/v1/roles/search?page=1&size=50&sort=id,desc",{level:Store.getLevelvalue})
+    .then(function (response) {
+        Store.setUserinfo(response.list)
+      }) 
+    .catch(function (error) {
+        console.log(error);
+    });
   }
+
   render() {
     //层级选项
-    
     const menu = (
       <Menu onClick={this.changelevelvalue}>
         <Menu.Item key='1'>
@@ -57,7 +64,7 @@ class Role1 extends Component {
         </Menu.Item>
       </Menu>
     );
-
+    //表格头
     const columns = [{
       title: '角色名称',
       dataIndex: 'name',
@@ -68,6 +75,24 @@ class Role1 extends Component {
     }, {
       title: '层级',
       dataIndex: 'level',
+      render:(text,record)=>{
+        if(text=='site'){
+          return(
+            <div>全局</div>
+          )
+        }
+        else if(text=='organization'){
+          return(
+            <div>组织</div>
+          )
+        }
+        else if(text=='project'){
+          return(
+            <div>项目</div>
+          )
+        }
+        
+      }
     },{
       title: '角色来源',
       dataIndex: 'modified',
@@ -92,36 +117,26 @@ class Role1 extends Component {
 
     return (
       <div>
-         <div id='Right'>
-           <div id='RightHead'>
-            <span id='RightHeadBlockOne'>角色管理</span>
+        <div id='Right'>
+          <div id='RightHead'>
+            <div id='RightHeadBlockOne'>角色管理</div>
             <div id='RightHeadBlockTwo'>
-              <Dropdown overlay={menu} trigger={["click"]}>
-                <Button>
-                  {Store.levelvalue} <Icon type="arrow_drop_down" />
-                </Button>
-              </Dropdown>
-            </div>
-            <div id='RightHeadBlockTwo'>
-              <NavLink to='/test/role2'>
-                <Button funcType="flat">创建角色<Icon type="baseline-arrow_drop_down" /></Button>
-              </NavLink>
-            </div>
-            <div id='RightHeadBlockTwo'>
-              <Button funcType="flat">基于所选角色创建<Icon type="baseline-arrow_drop_down" /></Button>
-            </div>
-            <div id='RightHeadBlockTwo'>
-              <Button funcType="flat">刷新<Icon type="baseline-arrow_drop_down" /></Button>
-            </div>
+                <Dropdown overlay={menu} trigger={["click"]}>
+                  <Button id='Button1'>
+                    {Store.levelchinese} <Icon type="arrow_drop_down" />
+                  </Button>
+                </Dropdown>
+                <Button funcType="flat"><NavLink to='/test/role2'>创建角色<Icon type="baseline-arrow_drop_down" /></NavLink></Button>
+                <Button funcType="flat">基于所选角色创建<Icon type="baseline-arrow_drop_down" /></Button>
+                <Button funcType="flat">刷新<Icon type="baseline-arrow_drop_down" /></Button>
+              </div>
           </div>
-
-          <div>
-            <span style={{ fontWeight: 'bolder',fontSize:'18px'}}>组织“运营组织”的角色</span>
-            <br />
-            <span>角色时您可分配给成员的一项权限。您可以创建角色并为其添加权限，也可以复制现有角<br />色并调整其权限</span>
-           </div>
-            <br />
-            <Table rowSelection={rowSelection} columns={columns} dataSource={Store.userinfo} /> 
+          <div id='textmid'>
+            <div id='textmid1' style={{ fontWeight: 'bolder',fontSize:'18px'}}>组织“运营组织”的角色</div>
+            <div id='textmid2'>角色时您可分配给成员的一项权限。您可以创建角色并为其添加权限，也可以复制现有角<br />色并调整其权限</div>
+          </div>
+          <br />
+          <Table rowSelection={rowSelection} columns={columns} dataSource={Store.userinfo} /> 
         </div>
       </div>
     );
